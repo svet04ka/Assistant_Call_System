@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить сотрудника{% endblock %}
+
+{% block content %}
+    <section class="form-section">
+        <h2>Добавить сотрудника</h2>
+        <form action="{{ url_for('add_employee_page') }}" method="POST">
+            <div class="form-group">
+                <label for="full_name">ФИО сотрудника:</label>
+                <input type="text" id="full_name" name="full_name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Текущая станция:</label>
+                <div class="station-select-group">
+                    <select id="employee_line" class="line-select">
+                        <option value="">Выберите линию</option>
+                        {% for line in stations|map(attribute='линия')|unique %}
+                            <option value="{{ line }}">{{ line }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="station_id" name="station_id" class="station-select" disabled>
+                        <option value="">Сначала выберите линию</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Языки, которыми владеет:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="languages" value="рус"> Русский</label>
+                    <label><input type="checkbox" name="languages" value="англ"> Английский</label>
+                    <label><input type="checkbox" name="languages" value="нем"> Немецкий</label>
+                    <label><input type="checkbox" name="languages" value="фр"> Французский</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="works_with_wheelchairs"> Работает с колясками
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Рабочие дни:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="work_days" value="пн"> Понедельник</label>
+                    <label><input type="checkbox" name="work_days" value="вт"> Вторник</label>
+                    <label><input type="checkbox" name="work_days" value="ср"> Среда</label>
+                    <label><input type="checkbox" name="work_days" value="чт"> Четверг</label>
+                    <label><input type="checkbox" name="work_days" value="пт"> Пятница</label>
+                    <label><input type="checkbox" name="work_days" value="сб"> Суббота</label>
+                    <label><input type="checkbox" name="work_days" value="вс"> Воскресенье</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="shift">Смена:</label>
+                <select id="shift" name="shift">
+                    <option value="">Не указана</option>
+                    <option value="утренняя">Утренняя</option>
+                    <option value="дневная">Дневная</option>
+                    <option value="вечерняя">Вечерняя</option>
+                    <option value="ночная">Ночная</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Добавить сотрудника</button>
+        </form>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stationsData = [
+                {% for station in stations %}
+                {
+                    id: {{ station.id }},
+                    название: "{{ station.название }}",
+                    линия: "{{ station.линия }}"
+                },
+                {% endfor %}
+            ];
+
+            function updateStationSelect(lineSelect, stationSelect) {
+                const selectedLine = lineSelect.value;
+                stationSelect.innerHTML = '<option value="">Выберите станцию</option>';
+                
+                if (selectedLine) {
+                    stationSelect.disabled = false;
+                    const lineStations = stationsData.filter(station => station.линия === selectedLine);
+                    
+                    lineStations.forEach(station => {
+                        const option = document.createElement('option');
+                        option.value = station.id;
+                        option.textContent = station.название;
+                        stationSelect.appendChild(option);
+                    });
+                } else {
+                    stationSelect.disabled = true;
+                }
+            }
+
+            document.querySelectorAll('.line-select').forEach(lineSelect => {
+                const stationSelect = lineSelect.parentNode.querySelector('.station-select');
+                
+                lineSelect.addEventListener('change', () => {
+                    updateStationSelect(lineSelect, stationSelect);
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Система сопровождения{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <div class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Центр обеспечения мобильности пассажиров</h1>
+            <nav>
+                <a href="{{ url_for('index') }}" class="nav-link">Главная</a>
+                <a href="{{ url_for('add_request_page') }}" class="nav-link">Добавить заявку</a>
+                <a href="{{ url_for('add_employee_page') }}" class="nav-link">Добавить сотрудника</a>
+                <a href="{{ url_for('requests_list') }}" class="nav-link">Список заявок</a>
+                <a href="{{ url_for('employees_list') }}" class="nav-link">Список сотрудников</a>
+            </nav>
+        </header>
+
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

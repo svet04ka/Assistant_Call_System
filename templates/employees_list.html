@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Список сотрудников{% endblock %}
+
+{% block content %}
+    <section class="list-section">
+        <h2>Список сотрудников</h2>
+        <div class="employees-list">
+            {% for emp in employees %}
+            <div class="employee-card">
+                <h3>{{ emp.фио }}</h3>
+                <p><strong>Статус:</strong> {{ emp.статус }}</p>
+                <p><strong>Текущая станция:</strong>
+                    {% if emp.текущая_станция %}
+                        {{ emp.текущая_станция.название }}
+                    {% else %}
+                        Не назначена
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

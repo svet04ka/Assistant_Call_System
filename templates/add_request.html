@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить заявку{% endblock %}
+
+{% block content %}
+    <section class="form-section">
+        <h2>Добавить новую заявку</h2>
+        <form action="{{ url_for('add_request_page') }}" method="POST">
+            <div class="form-group">
+                <label for="passenger_type">Тип пассажира:</label>
+                <select id="passenger_type" name="passenger_type" required>
+                    <option value="слабовидящий">Слабовидящий</option>
+                    <option value="колясочник">Колясочник</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Станция отправления:</label>
+                <div class="station-select-group">
+                    <select id="start_line" class="line-select" required>
+                        <option value="">Выберите линию</option>
+                        {% for line in stations|map(attribute='линия')|unique %}
+                            <option value="{{ line }}">{{ line }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="start_station" name="start_station" class="station-select" disabled required>
+                        <option value="">Сначала выберите линию</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Станция назначения:</label>
+                <div class="station-select-group">
+                    <select id="end_line" class="line-select" required>
+                        <option value="">Выберите линию</option>
+                        {% for line in stations|map(attribute='линия')|unique %}
+                            <option value="{{ line }}">{{ line }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="end_station" name="end_station" class="station-select" disabled required>
+                        <option value="">Сначала выберите линию</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="required_workers">Требуется сотрудников:</label>
+                <input type="number" id="required_workers" name="required_workers" min="1" max="4" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="baggage"> Есть багаж
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="request_time">Время выполнения:</label>
+                <input type="datetime-local" id="request_time" name="request_time" required>
+            </div>
+
+            <button type="submit" class="btn">Добавить заявку</button>
+        </form>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('request_time').value = now.toISOString().slice(0, 16);
+
+            const stationsData = [
+                {% for station in stations %}
+                {
+                    id: {{ station.id }},
+                    название: "{{ station.название }}",
+                    линия: "{{ station.линия }}"
+                },
+                {% endfor %}
+            ];
+
+            function updateStationSelect(lineSelect, stationSelect) {
+                const selectedLine = lineSelect.value;
+                stationSelect.innerHTML = '<option value="">Выберите станцию</option>';
+                
+                if (selectedLine) {
+                    stationSelect.disabled = false;
+                    const lineStations = stationsData.filter(station => station.линия === selectedLine);
+                    
+                    lineStations.forEach(station => {
+                        const option = document.createElement('option');
+                        option.value = station.id;
+                        option.textContent = station.название;
+                        stationSelect.appendChild(option);
+                    });
+                } else {
+                    stationSelect.disabled = true;
+                }
+            }
+
+            document.querySelectorAll('.line-select').forEach(lineSelect => {
+                const stationSelect = lineSelect.parentNode.querySelector('.station-select');
+                
+                lineSelect.addEventListener('change', () => {
+                    updateStationSelect(lineSelect, stationSelect);
+                });
+            });
+        });
+    </script>
+{% endblock %}

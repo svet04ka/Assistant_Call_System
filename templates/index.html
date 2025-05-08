@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="main-menu">
+        <h2>Добро пожаловать в систему сопровождения</h2>
+        <div class="menu-buttons">
+            <a href="{{ url_for('add_request_page') }}" class="menu-btn">Добавить заявку</a>
+            <a href="{{ url_for('add_employee_page') }}" class="menu-btn">Добавить сотрудника</a>
+            <a href="{{ url_for('requests_list') }}" class="menu-btn">Просмотр заявок</a>
+            <a href="{{ url_for('employees_list') }}" class="menu-btn">Просмотр сотрудников</a>
+        </div>
+    </section>
+{% endblock %}
