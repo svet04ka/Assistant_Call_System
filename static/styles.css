@@ -226,3 +226,354 @@ input[type="checkbox"] {
     width: 100%;
     max-width: 300px;
 }
+
+.monitor-section {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.btn {
+    padding: 10px 15px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #45a049;
+}
+
+/* Dashboard styles */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.stat-card p {
+    font-size: 2rem;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.stat-card span {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: normal;
+}
+
+.divider {
+    border-top: 1px solid #eee;
+    margin: 30px 0;
+}
+
+.requests-table-container {
+    overflow-x: auto;
+}
+
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.requests-table th, .requests-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.requests-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.status-новая {
+    color: #ff9800;
+    font-weight: 500;
+}
+
+.status-назначена {
+    color: #2196f3;
+    font-weight: 500;
+}
+
+.status-в_процессе {
+    color: #4caf50;
+    font-weight: 500;
+}
+
+.status-завершена {
+    color: #9e9e9e;
+    font-weight: 500;
+}
+
+/* Стили для фильтров */
+.filters-container {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-group {
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input[type="date"] {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    min-width: 150px;
+}
+
+.filter-button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.filter-button:hover {
+    background-color: #45a049;
+}
+
+.reset-button {
+    padding: 8px 16px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.reset-button:hover {
+    background-color: #d32f2f;
+}
+
+.reschedule-button {
+    padding: 8px 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.reschedule-button:hover {
+    background-color: #0b7dda;
+}
+
+.error-message {
+    color: #d9534f;
+    padding: 10px;
+    background-color: #f2dede;
+    border-radius: 4px;
+    display: none;
+}
+
+.auto-assign-controls {
+    padding: 15px, 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    position: relative;
+}
+
+#autoAssignBtn {
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    font-size: 13px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+#autoAssignBtn:hover {
+    background-color: #45a049;
+}
+
+#assignStatus {
+    margin-left: 15px;
+    color: #666;
+}
+
+/* Стили для статусов */
+.status-processing {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-success {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Кнопки */
+.btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Сообщения */
+.alert {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-top: 15px;
+    display: none;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.no-assignments {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Стили для кнопок и статусов */
+.btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.spinner-border {
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+.alert {
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-top: 15px;
+    display: none;
+}
+
+.alert-info {
+    background-color: #e7f5ff;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.alert-success {
+    background-color: #e6ffed;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #ffebee;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Анимация для кнопки */
+@keyframes buttonPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.btn-primary:not(:disabled):hover {
+    animation: buttonPulse 1.5s infinite;
+}
+
+/* Таблица */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.table th {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+}

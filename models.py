@@ -1,5 +1,6 @@
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, JSON, DateTime, ForeignKey, Text, \
-    CheckConstraint
+    CheckConstraint, Date, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
@@ -88,8 +89,17 @@ class Request(Base):
     багаж = Column(Boolean, nullable=False, server_default='false')
     запрошенное_время = Column(DateTime(timezone=True), nullable=False)
     расчетное_время_выполнения = Column(Integer)
+    назначенные_сотрудники = Column(JSONB, nullable=False, default=[])
     создано = Column(DateTime(timezone=True), server_default='now()')
     обновлено = Column(DateTime(timezone=True), server_default='now()', onupdate=datetime.now)
+
+    @property
+    def запрошенная_дата(self):
+        return self.запрошенное_время.date()
+
+    @property
+    def запрошенное_время_без_даты(self):
+        return self.запрошенное_время.time()
 
     # Связи
     станция_отправления = relationship(
@@ -194,6 +204,14 @@ class EmployeeRequest(Base):
     сотрудник = relationship("Employee", back_populates="заявки")
     заявка = relationship("Request", back_populates="сотрудники")
 
+class EmployeeSchedule(Base):
+    __tablename__ = 'employee_schedules'
+    id = Column(Integer, primary_key=True)
+    employee_id = Column(Integer, ForeignKey('employees.id'))
+    date = Column(Date)
+    assigned_requests = Column(ARRAY(Integer))  # Список ID назначенных заявок
+    available_from = Column(Time)
+    available_to = Column(Time)
 
 Base.metadata.create_all(bind=engine)
 
