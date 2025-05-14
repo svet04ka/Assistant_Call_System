@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Ручное распределение заявок{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Ручное распределение заявок</h1>
+    <p class="text-muted">Дата: {{ today }}</p>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Текущие заявки</h3>
+            
+            {% if not requests %}
+                <div class="alert alert-info">Нет заявок на сегодня</div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Маршрут</th>
+                                <th>Время</th>
+                                <th>Статус</th>
+                                <th>Сотрудники</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td>{{ req.id }}</td>
+                                <td>
+                                    {{ req.станция_отправления.название }} → 
+                                    {{ req.станция_назначения.название }}
+                                </td>
+                                <td>{{ req.запрошенное_время.strftime('%H:%M') }}</td>
+                                <td>
+                                    <span class="badge bg-{% if req.статус == 'новая' %}warning
+                                        {% elif req.статус == 'назначена' %}primary
+                                        {% elif req.статус == 'в процессе' %}info
+                                        {% elif req.статус == 'завершена' %}success
+                                        {% else %}secondary{% endif %}">
+                                        {{ req.статус }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if req.назначенные_сотрудники %}
+                                        {{ req.назначенные_сотрудники|length }} назначено
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="POST" class="d-inline">
+                                        <input type="hidden" name="request_id" value="{{ req.id }}">
+                                        <select name="new_status" class="form-select form-select-sm d-inline w-auto">
+                                            <option value="новая" {% if req.статус == 'новая' %}selected{% endif %}>Новая</option>
+                                            <option value="назначена" {% if req.статус == 'назначена' %}selected{% endif %}>Назначена</option>
+                                            <option value="в процессе" {% if req.статус == 'в процессе' %}selected{% endif %}>В процессе</option>
+                                            <option value="завершена" {% if req.статус == 'завершена' %}selected{% endif %}>Завершена</option>
+                                        </select>
+                                        <button type="submit" name="change_status" class="btn btn-sm btn-outline-secondary">
+                                            Обновить
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <h3>Доступные сотрудники</h3>
+
+            {% if not employees %}
+                <div class="alert alert-warning">Нет доступных сотрудников</div>
+            {% else %}
+                <div class="list-group">
+                    {% for emp in employees %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ emp.фио }}</h5>
+                            <span class="badge bg-{% if emp.статус == 'доступен' %}success{% else %}secondary{% endif %}">
+                                {{ emp.статус }}
+                            </span>
+                        </div>
+                        <p class="mb-1">
+                            Станция: {{ emp.текущая_станция.название if emp.текущая_станция else 'Не назначена' }}<br>
+                            Навыки:
+                            {% if emp.навыки and emp.навыки.работает_с_колясками %}
+                                <span class="badge bg-info">Работает с колясками</span>
+                            {% endif %}
+                            {% if emp.навыки and emp.навыки.языки %}
+                                {% for lang in emp.навыки.языки %}
+                                    <span class="badge bg-light text-dark">{{ lang }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+
+                        <form method="POST" class="mt-2">
+                            <input type="hidden" name="employee_id" value="{{ emp.id }}">
+                            <div class="input-group">
+                                <select name="request_id" class="form-select" required>
+                                    <option value="">Выберите заявку</option>
+                                    {% for req in requests %}
+                                        <option value="{{ req.id }}">
+                                            #{{ req.id }} ({{ req.станция_отправления.название }} → {{ req.станция_назначения.название }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" name="assign" class="btn btn-primary">
+                                    Назначить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -3,75 +3,228 @@
 {% block title %}Добавить сотрудника{% endblock %}
 
 {% block content %}
-    <section class="form-section">
-        <h2>Добавить сотрудника</h2>
-        <form action="{{ url_for('add_employee_page') }}" method="POST">
+    <section class="form-container">
+        <h2 class="form-title"><i class="bi bi-person-plus"></i> Добавить сотрудника</h2>
+
+        <form action="{{ url_for('add_employee_page') }}" method="POST" class="employee-form">
+            <!-- ФИО сотрудника -->
             <div class="form-group">
-                <label for="full_name">ФИО сотрудника:</label>
-                <input type="text" id="full_name" name="full_name" required>
+                <label for="full_name" class="form-label">ФИО сотрудника:</label>
+                <input type="text" id="full_name" name="full_name" class="form-input" required>
             </div>
 
+            <!-- Текущая станция -->
             <div class="form-group">
-                <label>Текущая станция:</label>
-                <div class="station-select-group">
-                    <select id="employee_line" class="line-select">
-                        <option value="">Выберите линию</option>
+                <label class="form-label">Текущая станция:</label>
+                <div class="station-row">
+                    <select id="employee_line" class="form-select line-select">
+                        <option value="" disabled selected>Выберите линию</option>
                         {% for line in stations|map(attribute='линия')|unique %}
                             <option value="{{ line }}">{{ line }}</option>
                         {% endfor %}
                     </select>
-                    <select id="station_id" name="station_id" class="station-select" disabled>
-                        <option value="">Сначала выберите линию</option>
+                    <select id="station_id" name="station_id" class="form-select station-select" disabled>
+                        <option value="" disabled selected>Выберите станцию</option>
                     </select>
                 </div>
             </div>
 
+            <!-- Языки -->
             <div class="form-group">
-                <label>Языки, которыми владеет:</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="languages" value="рус"> Русский</label>
-                    <label><input type="checkbox" name="languages" value="англ"> Английский</label>
-                    <label><input type="checkbox" name="languages" value="нем"> Немецкий</label>
-                    <label><input type="checkbox" name="languages" value="фр"> Французский</label>
+                <label class="form-label">Языки, которыми владеет:</label>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang_rus" name="languages" value="рус" class="form-checkbox">
+                        <label for="lang_rus" class="checkbox-label">Русский</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang_eng" name="languages" value="англ" class="form-checkbox">
+                        <label for="lang_eng" class="checkbox-label">Английский</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang_de" name="languages" value="нем" class="form-checkbox">
+                        <label for="lang_de" class="checkbox-label">Немецкий</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lang_fr" name="languages" value="фр" class="form-checkbox">
+                        <label for="lang_fr" class="checkbox-label">Французский</label>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="works_with_wheelchairs"> Работает с колясками
-                </label>
+            <!-- Работа с колясками -->
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="wheelchair" name="works_with_wheelchairs" class="form-checkbox">
+                <label for="wheelchair" class="checkbox-label">Работает с колясками</label>
             </div>
 
+            <!-- Рабочие дни -->
             <div class="form-group">
-                <label>Рабочие дни:</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="work_days" value="пн"> Понедельник</label>
-                    <label><input type="checkbox" name="work_days" value="вт"> Вторник</label>
-                    <label><input type="checkbox" name="work_days" value="ср"> Среда</label>
-                    <label><input type="checkbox" name="work_days" value="чт"> Четверг</label>
-                    <label><input type="checkbox" name="work_days" value="пт"> Пятница</label>
-                    <label><input type="checkbox" name="work_days" value="сб"> Суббота</label>
-                    <label><input type="checkbox" name="work_days" value="вс"> Воскресенье</label>
+                <label class="form-label">Рабочие дни:</label>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="day_mon" name="work_days" value="пн" class="form-checkbox">
+                        <label for="day_mon" class="checkbox-label">Понедельник</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="day_tue" name="work_days" value="вт" class="form-checkbox">
+                        <label for="day_tue" class="checkbox-label">Вторник</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="day_wed" name="work_days" value="ср" class="form-checkbox">
+                        <label for="day_wed" class="checkbox-label">Среда</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="day_thu" name="work_days" value="чт" class="form-checkbox">
+                        <label for="day_thu" class="checkbox-label">Четверг</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="day_fri" name="work_days" value="пт" class="form-checkbox">
+                        <label for="day_fri" class="checkbox-label">Пятница</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="day_sat" name="work_days" value="сб" class="form-checkbox">
+                        <label for="day_sat" class="checkbox-label">Суббота</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="day_sun" name="work_days" value="вс" class="form-checkbox">
+                        <label for="day_sun" class="checkbox-label">Воскресенье</label>
+                    </div>
                 </div>
             </div>
 
+            <!-- Смена -->
             <div class="form-group">
-                <label for="shift">Смена:</label>
-                <select id="shift" name="shift">
-                    <option value="">Не указана</option>
-                    <option value="утренняя">Утренняя</option>
-                    <option value="дневная">Дневная</option>
-                    <option value="вечерняя">Вечерняя</option>
-                    <option value="ночная">Ночная</option>
+                <label for="shift" class="form-label">Смена:</label>
+                <select id="shift" name="shift" class="form-select">
+                    <option value="" disabled selected>Выберите смену</option>
+                    <option value="утренняя">Утренняя (8:00-14:00)</option>
+                    <option value="дневная">Дневная (14:00-20:00)</option>
+                    <option value="вечерняя">Вечерняя (20:00-2:00)</option>
+                    <option value="ночная">Ночная (2:00-8:00)</option>
                 </select>
             </div>
 
-            <button type="submit" class="btn">Добавить сотрудника</button>
+            <button type="submit" class="submit-btn">Добавить сотрудника</button>
         </form>
     </section>
 
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .employee-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-input, .form-select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+
+        .station-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .station-row .form-select {
+            flex: 1;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin: 0;
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .submit-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #3a7bc8;
+        }
+
+        @media (max-width: 768px) {
+            .station-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Данные станций
             const stationsData = [
                 {% for station in stations %}
                 {
@@ -82,14 +235,15 @@
                 {% endfor %}
             ];
 
+            // Обновление списка станций при выборе линии
             function updateStationSelect(lineSelect, stationSelect) {
                 const selectedLine = lineSelect.value;
-                stationSelect.innerHTML = '<option value="">Выберите станцию</option>';
-                
+                stationSelect.innerHTML = '<option value="" disabled selected>Выберите станцию</option>';
+
                 if (selectedLine) {
                     stationSelect.disabled = false;
                     const lineStations = stationsData.filter(station => station.линия === selectedLine);
-                    
+
                     lineStations.forEach(station => {
                         const option = document.createElement('option');
                         option.value = station.id;
@@ -101,13 +255,18 @@
                 }
             }
 
-            document.querySelectorAll('.line-select').forEach(lineSelect => {
-                const stationSelect = lineSelect.parentNode.querySelector('.station-select');
-                
-                lineSelect.addEventListener('change', () => {
-                    updateStationSelect(lineSelect, stationSelect);
-                });
+            // Инициализация обработчиков для выбора линии/станции
+            const lineSelect = document.getElementById('employee_line');
+            const stationSelect = document.getElementById('station_id');
+
+            lineSelect.addEventListener('change', () => {
+                updateStationSelect(lineSelect, stationSelect);
             });
+
+            // Инициализация при загрузке, если есть выбранное значение
+            if (lineSelect.value) {
+                updateStationSelect(lineSelect, stationSelect);
+            }
         });
     </script>
 {% endblock %}

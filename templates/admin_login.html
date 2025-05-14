@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Админ-авторизация{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="bi bi-shield-lock auth-icon"></i>
+            <h2>Доступ к админ-панели</h2>
+            <p>Введите пароль для продолжения</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('admin_login') }}" class="auth-form">
+            <div class="form-group">
+                <label for="password" class="form-label">Пароль</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-key"></i></span>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+            </div>
+
+            <div class="auth-actions">
+                <button type="submit" class="btn auth-btn">
+                    <i class="bi bi-box-arrow-in-right"></i> Войти
+                </button>
+                <a href="{{ url_for('index') }}" class="btn auth-btn-secondary">
+                    <i class="bi bi-house-door"></i> На главную
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+    }
+
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+        transition: transform 0.3s ease;
+    }
+
+    .auth-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .auth-icon {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
+
+    .auth-header h2 {
+        color: var(--dark-color);
+        margin-bottom: 5px;
+    }
+
+    .auth-header p {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .auth-form {
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark-color);
+    }
+
+    .input-group-text {
+        background-color: var(--light-color);
+    }
+
+    .auth-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .auth-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .auth-btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+    }
+
+    .auth-btn-secondary {
+        background-color: white;
+        color: var(--dark-color);
+        border: 1px solid #dee2e6;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .auth-btn-secondary:hover {
+        background-color: var(--light-color);
+        border-color: #adb5bd;
+    }
+
+    @media (max-width: 576px) {
+        .auth-card {
+            padding: 30px 20px;
+        }
+    }
+</style>
+{% endblock %}

@@ -3,22 +3,78 @@
 {% block title %}Список сотрудников{% endblock %}
 
 {% block content %}
-    <section class="list-section">
-        <h2>Список сотрудников</h2>
-        <div class="employees-list">
-            {% for emp in employees %}
-            <div class="employee-card">
-                <h3>{{ emp.фио }}</h3>
-                <p><strong>Статус:</strong> {{ emp.статус }}</p>
-                <p><strong>Текущая станция:</strong>
-                    {% if emp.текущая_станция %}
-                        {{ emp.текущая_станция.название }}
-                    {% else %}
-                        Не назначена
-                    {% endif %}
-                </p>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0"><i class="bi bi-people-fill"></i> Список сотрудников</h1>
+        <a href="/add_employee" class="btn btn-outline-secondary">
+            <i class="bi bi-plus"></i> Добавить сотрудника
+        </a>
+    </div>
+
+    <div class="card border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th width="150">Статус</th>
+                            <th>Текущая станция</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emp in employees %}
+                        <tr>
+                            <td class="fw-bold">
+                                <i class="bi bi-person-circle me-2"></i>
+                                {{ emp.фио }}
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    {{ emp.статус }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if emp.текущая_станция %}
+                                    {{ emp.текущая_станция.название }}
+                                {% else %}
+                                    <span class="text-muted">Не назначена</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% endfor %}
         </div>
-    </section>
+    </div>
+</div>
+
+<style>
+    .table {
+        font-size: 0.95rem;
+        border-color: #f1f1f1;
+    }
+
+    .table th {
+        font-weight: 500;
+        color: #6c757d;
+        border-bottom-width: 1px;
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 12px 16px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .badge {
+        font-weight: 400;
+        padding: 4px 8px;
+        border: 1px solid #dee2e6;
+    }
+</style>
 {% endblock %}

@@ -3,73 +3,179 @@
 {% block title %}Добавить заявку{% endblock %}
 
 {% block content %}
-    <section class="form-section">
-        <h2>Добавить новую заявку</h2>
-        <form action="{{ url_for('add_request_page') }}" method="POST">
+    <section class="form-container">
+        <h2 class="form-title"><i class="bi bi-plus-circle"></i> Добавить новую заявку</h2>
+
+        <form action="{{ url_for('add_request_page') }}" method="POST" class="request-form">
+            <!-- Тип пассажира -->
             <div class="form-group">
-                <label for="passenger_type">Тип пассажира:</label>
-                <select id="passenger_type" name="passenger_type" required>
+                <label for="passenger_type" class="form-label">Тип пассажира:</label>
+                <select id="passenger_type" name="passenger_type" class="form-select" required>
+                    <option value="" disabled selected>Выберите тип</option>
                     <option value="слабовидящий">Слабовидящий</option>
                     <option value="колясочник">Колясочник</option>
                 </select>
             </div>
 
+            <!-- Станция отправления -->
             <div class="form-group">
-                <label>Станция отправления:</label>
-                <div class="station-select-group">
-                    <select id="start_line" class="line-select" required>
-                        <option value="">Выберите линию</option>
+                <label class="form-label">Станция отправления:</label>
+                <div class="station-row">
+                    <select id="start_line" class="form-select line-select" required>
+                        <option value="" disabled selected>Выберите линию</option>
                         {% for line in stations|map(attribute='линия')|unique %}
                             <option value="{{ line }}">{{ line }}</option>
                         {% endfor %}
                     </select>
-                    <select id="start_station" name="start_station" class="station-select" disabled required>
-                        <option value="">Сначала выберите линию</option>
+                    <select id="start_station" name="start_station" class="form-select station-select" disabled required>
+                        <option value="" disabled selected>Выберите станцию</option>
                     </select>
                 </div>
             </div>
 
+            <!-- Станция назначения -->
             <div class="form-group">
-                <label>Станция назначения:</label>
-                <div class="station-select-group">
-                    <select id="end_line" class="line-select" required>
-                        <option value="">Выберите линию</option>
+                <label class="form-label">Станция назначения:</label>
+                <div class="station-row">
+                    <select id="end_line" class="form-select line-select" required>
+                        <option value="" disabled selected>Выберите линию</option>
                         {% for line in stations|map(attribute='линия')|unique %}
                             <option value="{{ line }}">{{ line }}</option>
                         {% endfor %}
                     </select>
-                    <select id="end_station" name="end_station" class="station-select" disabled required>
-                        <option value="">Сначала выберите линию</option>
+                    <select id="end_station" name="end_station" class="form-select station-select" disabled required>
+                        <option value="" disabled selected>Выберите станцию</option>
                     </select>
                 </div>
             </div>
 
+            <!-- Дополнительные поля -->
             <div class="form-group">
-                <label for="required_workers">Требуется сотрудников:</label>
-                <input type="number" id="required_workers" name="required_workers" min="1" max="4" value="1" required>
+                <label for="required_workers" class="form-label">Требуется сотрудников:</label>
+                <input type="number" id="required_workers" name="required_workers"
+                       class="form-input" min="1" max="4" value="1" required>
+            </div>
+
+            <!-- Чекбокс багажа в одной строке -->
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="baggage" name="baggage" class="form-checkbox">
+                <label for="baggage" class="checkbox-label">Есть багаж</label>
             </div>
 
             <div class="form-group">
-                <label>
-                    <input type="checkbox" name="baggage"> Есть багаж
-                </label>
+                <label for="request_time" class="form-label">Время выполнения:</label>
+                <input type="datetime-local" id="request_time" name="request_time" class="form-input" required>
             </div>
 
-            <div class="form-group">
-                <label for="request_time">Время выполнения:</label>
-                <input type="datetime-local" id="request_time" name="request_time" required>
-            </div>
-
-            <button type="submit" class="btn">Добавить заявку</button>
+            <button type="submit" class="submit-btn">Добавить заявку</button>
         </form>
     </section>
 
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .request-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-select, .form-input {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        .form-select:focus, .form-input:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+
+        .station-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .station-row .form-select {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-checkbox {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin: 0;
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .submit-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #3a7bc8;
+        }
+
+        @media (max-width: 768px) {
+            .station-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Установка текущей даты и времени
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('request_time').value = now.toISOString().slice(0, 16);
 
+            // Данные станций
             const stationsData = [
                 {% for station in stations %}
                 {
@@ -80,14 +186,15 @@
                 {% endfor %}
             ];
 
+            // Обновление списка станций при выборе линии
             function updateStationSelect(lineSelect, stationSelect) {
                 const selectedLine = lineSelect.value;
-                stationSelect.innerHTML = '<option value="">Выберите станцию</option>';
-                
+                stationSelect.innerHTML = '<option value="" disabled selected>Выберите станцию</option>';
+
                 if (selectedLine) {
                     stationSelect.disabled = false;
                     const lineStations = stationsData.filter(station => station.линия === selectedLine);
-                    
+
                     lineStations.forEach(station => {
                         const option = document.createElement('option');
                         option.value = station.id;
@@ -99,12 +206,18 @@
                 }
             }
 
+            // Инициализация обработчиков для всех пар линия-станция
             document.querySelectorAll('.line-select').forEach(lineSelect => {
-                const stationSelect = lineSelect.parentNode.querySelector('.station-select');
-                
+                const stationSelect = lineSelect.closest('.station-row').querySelector('.station-select');
+
                 lineSelect.addEventListener('change', () => {
                     updateStationSelect(lineSelect, stationSelect);
                 });
+
+                // Инициализация при загрузке, если есть выбранное значение
+                if (lineSelect.value) {
+                    updateStationSelect(lineSelect, stationSelect);
+                }
             });
         });
     </script>

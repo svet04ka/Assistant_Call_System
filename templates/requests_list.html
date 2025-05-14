@@ -1,221 +1,89 @@
 {% extends "base.html" %}
 
-{% block title %}Просмотр заявок{% endblock %}
+{% block title %}Список заявок{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <h1>Список заявок</h1>
-
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0"><i class="bi bi-list-task"></i> Список заявок</h1>
+        <a href="{{ url_for('add_request_page') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-plus"></i> Новая заявка
+        </a>
     </div>
 
-    <div class="filters-container">
-        <form method="get" action="{{ url_for('requests_list') }}">
-            <div class="filter-group">
-                <label for="status">Статус:</label>
-                <select id="status" name="status">
-                    <option value="">Все</option>
-                    <option value="новая" {% if request.args.get('status') == 'новая' %}selected{% endif %}>Новые</option>
-                    <option value="назначена" {% if request.args.get('status') == 'назначена' %}selected{% endif %}>Назначенные</option>
-                    <option value="в_процессе" {% if request.args.get('status') == 'в_процессе' %}selected{% endif %}>В процессе</option>
-                    <option value="завершена" {% if request.args.get('status') == 'завершена' %}selected{% endif %}>Завершенные</option>
-                </select>
+    <div class="card border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th width="80">ID</th>
+                            <th>Тип пассажира</th>
+                            <th>Маршрут</th>
+                            <th width="180">Время</th>
+                            <th width="150">Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                        <tr>
+                            <td class="fw-bold">#{{ req.id }}</td>
+                            <td>
+                                <span class="d-inline-flex align-items-center">
+                                    <i class="bi {% if req.тип_пассажира == 'колясочник' %}bi-wheelchair{% else %}bi-eye{% endif %} me-2"></i>
+                                    {{ req.тип_пассажира }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span>{{ req.станция_отправления.название }}</span>
+                                    <i class="bi bi-arrow-right mx-2 text-muted"></i>
+                                    <span>{{ req.станция_назначения.название }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div>{{ req.запрошенное_время.strftime('%d.%m.%Y') }}</div>
+                                <div class="text-muted small">{{ req.запрошенное_время.strftime('%H:%M') }}</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    {{ req.статус }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-
-            <div class="filter-group">
-                <label for="date">Дата:</label>
-                <input type="date" id="date" name="date" value="{{ request.args.get('date', '') }}">
-            </div>
-
-            <button type="submit" class="filter-button">Применить фильтры</button>
-            <a href="{{ url_for('requests_list') }}" class="reset-button">Сбросить</a>
-            <form method="post" action="{{ url_for('reschedule') }}" style="display: inline;">
-                <div class="auto-assign-controls">
-                    <button id="autoAssignBtn" class="btn btn-primary">
-                        <span id="assignBtnText">Выполнить автоназначение</span>
-                        <div id="assignSpinner" class="spinner-border spinner-border-sm" role="status" style="display: none;">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </button>
-                    <button id="refreshBtn" class="btn btn-secondary">Обновить список</button>
-                    <div id="assignStatus" class="alert mt-3" style="display: none;"></div>
-                </div>
-            </form>
-        </form>
-    </div>
-
-    <div class="stats-container">
-        <div class="stat-card">
-            <h3>Новые заявки</h3>
-            <p>{{ new_requests_count }} <span>Требуют назначения</span></p>
         </div>
-
-        <div class="stat-card">
-            <h3>Заявки в работе</h3>
-            <p>{{ in_progress_count }} <span>Выполняются сейчас</span></p>
-        </div>
-
-        <div class="stat-card">
-            <h3>Всего заявок</h3>
-            <p>{{ total_requests }} <span>За все время</span></p>
-        </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <h2>Последние заявки</h2>
-    <div class="requests-table-container">
-        <table class="requests-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Дата</th>
-                    <th>Маршрут</th>
-                    <th>Статус</th>
-                    <th>Сотрудники</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for req in latest_requests %}
-                <tr>
-                    <td>{{ req.id }}</td>
-                    <td>{{ req.запрошенное_время.strftime('%d.%m.%Y') }}</td>
-                    <td>{{ req.станция_отправления.название }} → {{ req.станция_назначения.название }}</td>
-                    <td><span class="status-{{ req.статус }}">{{ req.статус }}</span></td>
-                    <td>
-                        {% if req.назначенные_сотрудники %}
-                            {{ req.назначенные_сотрудники|join(', ') }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-     <div id="currentAssignments" class="assignments-container">
-        <h3>Текущие назначения</h3>
-        <div id="assignmentsList"></div>
     </div>
 </div>
 
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const assignBtn = document.getElementById('autoAssignBtn');
-    const assignBtnText = document.getElementById('assignBtnText');
-    const assignSpinner = document.getElementById('assignSpinner');
-    const statusEl = document.getElementById('assignStatus');
-    const refreshBtn = document.getElementById('refreshBtn');
-
-    // Функция для показа статуса
-    function showStatus(message, type = 'info') {
-        statusEl.textContent = message;
-        statusEl.className = `alert alert-${type}`;
-        statusEl.style.display = 'block';
+<style>
+    .table {
+        font-size: 0.95rem;
+        border-color: #f1f1f1;
     }
 
-    // Функция автоназначения
-    async function runAutoAssign() {
-        try {
-            assignBtn.disabled = true;
-            assignBtnText.textContent = "Идет назначение...";
-            assignSpinner.style.display = 'inline-block';
-            showStatus("Идет процесс автоназначения...", 'info');
-
-            const startTime = new Date();
-            const response = await fetch('/auto_assign', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            const data = await response.json();
-            const endTime = new Date();
-            const duration = (endTime - startTime) / 1000;
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Ошибка сервера');
-            }
-
-            showStatus(`${data.message} (${duration.toFixed(2)} сек)`, 'success');
-            updateAssignments();
-        } catch (error) {
-            console.error('Ошибка:', error);
-            showStatus(error.message, 'danger');
-        } finally {
-            assignBtn.disabled = false;
-            assignBtnText.textContent = "Выполнить автоназначение";
-            assignSpinner.style.display = 'none';
-        }
+    .table th {
+        font-weight: 500;
+        color: #6c757d;
+        border-bottom-width: 1px;
     }
 
-    // Обновление списка назначений
-    async function updateAssignments() {
-        try {
-            const response = await fetch('/assign_status');
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error('Ошибка при загрузке данных');
-            }
-
-            renderAssignments(data);
-        } catch (error) {
-            console.error('Ошибка при обновлении:', error);
-        }
+    .table td {
+        vertical-align: middle;
+        padding: 12px 16px;
     }
 
-    // Отображение назначений
-    function renderAssignments(assignments) {
-        const container = document.getElementById('assignmentsList');
-        if (!container) return;
-
-        if (!assignments || assignments.length === 0) {
-            container.innerHTML = '<div class="alert alert-info">Нет текущих назначений</div>';
-            return;
-        }
-
-        let html = `
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Маршрут</th>
-                        <th>Время</th>
-                        <th>Статус</th>
-                        <th>Сотрудники</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-
-        assignments.forEach(req => {
-            html += `
-            <tr>
-                <td>${req.id}</td>
-                <td>${req.route}</td>
-                <td>${req.time}</td>
-                <td class="status-${req.status}">${req.status}</td>
-                <td>${req.employees?.join(', ') || '-'}</td>
-            </tr>`;
-        });
-
-        html += `</tbody></table></div>`;
-        container.innerHTML = html;
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
     }
 
-    // Назначаем обработчики
-    assignBtn.addEventListener('click', runAutoAssign);
-    refreshBtn.addEventListener('click', updateAssignments);
-
-    // Автообновление каждые 10 секунд
-    setInterval(updateAssignments, 10000);
-
-    // Первоначальная загрузка
-    updateAssignments();
-});
-</script>
+    .badge {
+        font-weight: 400;
+        padding: 4px 8px;
+        border: 1px solid #dee2e6;
+    }
+</style>
 {% endblock %}
